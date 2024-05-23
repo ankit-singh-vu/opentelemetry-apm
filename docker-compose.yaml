@@ -86,6 +86,8 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_FEATURE_TOGGLES_ENABLE: "timeSeriesTable"
 
+
+
   wordpress:
     image: siltu-wordpress:1.0
     container_name: wordpress
@@ -101,8 +103,8 @@ services:
       - OTEL_METRICS_EXPORTER=none
       - OTEL_LOGS_EXPORTER=otlp
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317/opentelemetry.proto.collector.trace.v1.TraceService/Export
-      - OTEL_PROPAGATORS=b3,baggage,tracecontext
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_PROPAGATORS=baggage,tracecontext
       - OTEL_SERVICE_NAME=my-wordpress-installation
   db:
     image: mysql:5.7
