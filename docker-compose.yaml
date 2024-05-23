@@ -85,3 +85,30 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_FEATURE_TOGGLES_ENABLE: "timeSeriesTable"
+
+  wordpress:
+    image: siltu-wordpress:1.0
+    container_name: wordpress
+    ports:
+      - "8090:80"
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress_password
+      - WORDPRESS_DB_NAME=wordpress
+      - OTEL_PHP_AUTOLOAD_ENABLED=true
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317/opentelemetry.proto.collector.trace.v1.TraceService/Export
+      - OTEL_PROPAGATORS=b3,baggage,tracecontext
+      - OTEL_SERVICE_NAME=my-wordpress-installation
+  db:
+    image: mysql:5.7
+    container_name: wordpress_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
